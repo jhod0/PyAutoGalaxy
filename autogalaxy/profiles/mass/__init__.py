@@ -12,6 +12,7 @@ from .total import (
     PowerLawSph,
     Isothermal,
     IsothermalSph,
+    dPIESph,
 )
 from .dark import (
     gNFW,
