@@ -162,6 +162,11 @@ class dPIE(dPIESph):
         ys = (sintheta * _xs + costheta * _ys)
         return ys, xs
 
+    def _ellip(self):
+        ellip = np.sqrt(self.ell_comps[0]**2 + self.ell_comps[1]**2)
+        MAX_ELLIP = 0.99999
+        return min(ellip, MAX_ELLIP)
+
     @aa.grid_dec.grid_2d_to_vector_yx
     @aa.grid_dec.grid_2d_to_structure
     def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
@@ -170,7 +175,7 @@ class dPIE(dPIESph):
         xoff, yoff = xs - xcen, ys - ycen
         _ys, _xs = self._align_to_major_axis(yoff, xoff)
 
-        ellip = np.sqrt(self.ell_comps[0]**2 + self.ell_comps[1]**2)
+        ellip = self._ellip()
         _radii = np.sqrt(_xs**2 * (1 - ellip) + _ys**2 * (1 + ellip))
 
         # Compute the deflection magnitude of a *non-elliptical* profile
@@ -193,7 +198,7 @@ class dPIE(dPIESph):
         xoff, yoff = xs - xcen, ys - ycen
         _ys, _xs = self._align_to_major_axis(yoff, xoff)
 
-        ellip = np.sqrt(self.ell_comps[0]**2 + self.ell_comps[1]**2)
+        ellip = self._ellip()
         _radii = np.sqrt(_xs**2 * (1 - ellip) + _ys**2 * (1 + ellip))
 
         # Compute the convergence and deflection of a *circular* profile
@@ -213,6 +218,6 @@ class dPIE(dPIESph):
         (ycen, xcen) = self.centre
         xoff, yoff = xs - xcen, ys - ycen
         _ys, _xs = self._align_to_major_axis(yoff, xoff)
-        ellip = np.sqrt(self.ell_comps[0]**2 + self.ell_comps[1]**2)
+        ellip = self._ellip()
         _radii = np.sqrt(_xs**2 * (1 - ellip) + _ys**2 * (1 + ellip))
         return super(dPIESph, self)._potential(_radii)

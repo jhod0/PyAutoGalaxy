@@ -29,6 +29,7 @@ label:
     kappa: \kappa
     kappa_s: \kappa_{\rm s}
     log10m_vir: log_{\rm 10}(m_{vir})
+    log10Mass: \log_{10}(M)
     m: m
     mass: M
     mass_at_200: M_{\rm 200}
