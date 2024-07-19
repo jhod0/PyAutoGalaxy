@@ -34,6 +34,7 @@ from .dark import (
 )
 from .stellar import (
     Gaussian,
+    GaussianGradient,
     Sersic,
     SersicSph,
     Exponential,
@@ -42,8 +43,8 @@ from .stellar import (
     DevVaucouleursSph,
     SersicCore,
     SersicCoreSph,
-    SersicRadialGradient,
-    SersicRadialGradientSph,
+    SersicGradient,
+    SersicGradientSph,
     Chameleon,
     ChameleonSph,
 )

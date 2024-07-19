@@ -90,11 +90,6 @@ def make_noise_map_7x7():
     return fixtures.make_noise_map_7x7()
 
 
-@pytest.fixture(name="sub_mask_2d_7x7")
-def make_sub_mask_2d_7x7():
-    return fixtures.make_sub_mask_2d_7x7()
-
-
 @pytest.fixture(name="imaging_7x7")
 def make_imaging_7x7():
     return fixtures.make_imaging_7x7()
@@ -108,6 +103,11 @@ def make_image_7x7():
 @pytest.fixture(name="masked_imaging_7x7")
 def make_masked_imaging_7x7():
     return fixtures.make_masked_imaging_7x7()
+
+
+@pytest.fixture(name="masked_imaging_7x7_sub_2")
+def make_masked_imaging_7x7_sub_2():
+    return fixtures.make_masked_imaging_7x7_sub_2()
 
 
 @pytest.fixture(name="masked_imaging_covariance_7x7")
@@ -143,11 +143,6 @@ def make_mask_2d_7x7_1_pix():
 @pytest.fixture(name="grid_1d_7")
 def make_grid_1d_7():
     return fixtures.make_grid_1d_7()
-
-
-@pytest.fixture(name="sub_grid_1d_7")
-def make_sub_grid_1d_7():
-    return fixtures.make_sub_grid_1d_7()
 
 
 @pytest.fixture(name="grid_2d_iterate_7x7")
@@ -195,14 +190,9 @@ def make_grid_2d_7x7():
     return fixtures.make_grid_2d_7x7()
 
 
-@pytest.fixture(name="sub_grid_2d_7x7")
-def make_sub_grid_2d_7x7():
-    return fixtures.make_sub_grid_2d_7x7()
-
-
-@pytest.fixture(name="sub_grid_2d_7x7_simple")
-def make_sub_grid_2d_7x7_simple():
-    return fixtures.make_sub_grid_2d_7x7_simple()
+@pytest.fixture(name="grid_2d_7x7_simple")
+def make_grid_2d_7x7_simple():
+    return fixtures.make_grid_2d_7x7_simple()
 
 
 @pytest.fixture(name="ps_0")
@@ -386,9 +376,9 @@ def make_include_2d_all():
     return fixtures.make_include_2d_all()
 
 
-@pytest.fixture(name="samples_with_result")
-def make_samples_with_result():
-    return fixtures.make_samples_with_result()
+@pytest.fixture(name="samples_summary_with_result")
+def make_samples_summary_with_result():
+    return fixtures.make_samples_summary_with_result()
 
 
 @pytest.fixture(name="analysis_imaging_7x7")

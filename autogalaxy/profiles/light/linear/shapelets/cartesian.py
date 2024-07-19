@@ -50,12 +50,13 @@ class ShapeletCartesian(lp.ShapeletCartesian, LightProfileLinear):
             n_y=n_y, n_x=n_x, centre=centre, ell_comps=ell_comps, beta=beta
         )
 
-    @aa.grid_dec.grid_2d_to_structure
+    @aa.over_sample
+    @aa.grid_dec.to_array
     @check_operated_only
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
     def image_2d_from(
-        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None
+        self, grid: aa.type.Grid2DLike, operated_only: Optional[bool] = None, **kwargs
     ) -> np.ndarray:
         """
         Returns the Cartesian Shapelet light profile's 2D image from a 2D grid of Cartesian (y,x) coordinates.
@@ -98,10 +99,6 @@ class ShapeletCartesian(lp.ShapeletCartesian, LightProfileLinear):
             )
         )
 
-    @property
-    def lp_cls(self):
-        return lp.ShapeletCartesian
-
 
 class ShapeletCartesianSph(ShapeletCartesian):
     def __init__(
@@ -137,7 +134,3 @@ class ShapeletCartesianSph(ShapeletCartesian):
         super().__init__(
             n_y=n_y, n_x=n_x, centre=centre, ell_comps=(0.0, 0.0), beta=beta
         )
-
-    @property
-    def lp_cls(self):
-        return lp.ShapeletCartesian

@@ -37,7 +37,7 @@ def test__lp_linear_func_list_galaxy_dict(lp_0, masked_imaging_7x7):
     assert lp_linear_func_list[1].light_profile_list[0] == lp_linear_1
     assert lp_linear_func_list[2].light_profile_list[0] == lp_linear_2
 
-    basis = ag.lp_basis.Basis(light_profile_list=[lp_linear_0, lp_linear_1])
+    basis = ag.lp_basis.Basis(profile_list=[lp_linear_0, lp_linear_1])
 
     g0 = ag.Galaxy(redshift=0.5, bulge=basis)
 
@@ -181,7 +181,7 @@ def test__regularization_list(masked_imaging_7x7):
     regularization_2 = ag.reg.Constant(coefficient=3.0)
 
     basis = ag.lp_basis.Basis(
-        light_profile_list=[ag.lp_linear.Gaussian()], regularization=regularization_2
+        profile_list=[ag.lp_linear.Gaussian()], regularization=regularization_2
     )
 
     g3 = ag.Galaxy(redshift=0.5, bulge=basis)
@@ -197,15 +197,12 @@ def test__regularization_list(masked_imaging_7x7):
     assert regularization_list[2] == regularization_0
 
 
-def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
+def test__inversion_imaging_from(grid_2d_7x7, masked_imaging_7x7):
     g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.Sersic())
 
     to_inversion = ag.GalaxiesToInversion(
-        galaxies=[ag.Galaxy(redshift=0.5), g_linear],
         dataset=masked_imaging_7x7,
-        data=masked_imaging_7x7.data,
-        noise_map=masked_imaging_7x7.noise_map,
-        w_tilde=masked_imaging_7x7.w_tilde,
+        galaxies=[ag.Galaxy(redshift=0.5), g_linear],
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -221,11 +218,8 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
     g0 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     to_inversion = ag.GalaxiesToInversion(
-        galaxies=[ag.Galaxy(redshift=0.5), g0],
         dataset=masked_imaging_7x7,
-        data=masked_imaging_7x7.data,
-        noise_map=masked_imaging_7x7.noise_map,
-        w_tilde=masked_imaging_7x7.w_tilde,
+        galaxies=[ag.Galaxy(redshift=0.5), g0],
         settings_inversion=ag.SettingsInversion(use_w_tilde=False),
     )
 
@@ -236,15 +230,12 @@ def test__inversion_imaging_from(sub_grid_2d_7x7, masked_imaging_7x7):
     )
 
 
-def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
+def test__inversion_interferometer_from(grid_2d_7x7, interferometer_7):
     g_linear = ag.Galaxy(redshift=0.5, light_linear=ag.lp_linear.Sersic())
 
     to_inversion = ag.GalaxiesToInversion(
-        galaxies=[ag.Galaxy(redshift=0.5), g_linear],
         dataset=interferometer_7,
-        data=interferometer_7.visibilities,
-        noise_map=interferometer_7.noise_map,
-        w_tilde=None,
+        galaxies=[ag.Galaxy(redshift=0.5), g_linear],
         settings_inversion=ag.SettingsInversion(
             use_w_tilde=False, use_linear_operators=False
         ),
@@ -264,11 +255,8 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
     g0 = ag.Galaxy(redshift=0.5, pixelization=pixelization)
 
     to_inversion = ag.GalaxiesToInversion(
-        galaxies=[ag.Galaxy(redshift=0.5), g0],
         dataset=interferometer_7,
-        data=interferometer_7.visibilities,
-        noise_map=interferometer_7.noise_map,
-        w_tilde=None,
+        galaxies=[ag.Galaxy(redshift=0.5), g0],
         settings_inversion=ag.SettingsInversion(
             use_w_tilde=False, use_linear_operators=False
         ),
@@ -277,7 +265,7 @@ def test__inversion_interferometer_from(sub_grid_2d_7x7, interferometer_7):
     inversion = to_inversion.inversion
 
     assert inversion.mapped_reconstructed_data.real == pytest.approx(
-        interferometer_7.visibilities.real, 1.0e-2
+        interferometer_7.data.real, 1.0e-2
     )
 
 

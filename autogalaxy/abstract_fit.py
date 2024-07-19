@@ -8,13 +8,16 @@ if TYPE_CHECKING:
 
 import autoarray as aa
 
-from autogalaxy.profiles.light.abstract import LightProfile
 from autogalaxy.profiles.light.linear import LightProfileLinear
-from autogalaxy.profiles.light.basis import Basis
+from autogalaxy.profiles.basis import Basis
 
 
 class AbstractFitInversion:
-    def __init__(self, model_obj, sky: Optional[LightProfile], settings_inversion: aa.SettingsInversion):
+    def __init__(
+        self,
+        model_obj,
+        settings_inversion: aa.SettingsInversion,
+    ):
         """
         An abstract fit object which fits to datasets (e.g. imaging, interferometer) inherit from.
 
@@ -27,14 +30,10 @@ class AbstractFitInversion:
             The object which contains the model components (e.g. light profiles, galaxies, etc) which are used to
             create the model-data that fits the data. In PyAutoGalaxy this is a list of galaxies and PyAutoLens
             it is a `Tracer`.
-        sky
-            Contains model components which specifically fit the background sky emission in an image (e.g. a `Sky`
-            light profile).
         settings_inversion
             Settings controlling how an inversion is fitted for example which linear algebra formalism is used.
         """
         self.model_obj = model_obj
-        self.sky = sky
         self.settings_inversion = settings_inversion
 
     @property
@@ -63,7 +62,7 @@ class AbstractFitInversion:
             A bool which is True if an inversion is performed.
         """
 
-        return self.model_obj.perform_inversion or isinstance(self.sky, Basis)
+        return self.model_obj.perform_inversion
 
     @property
     def w_tilde(self) -> Optional[aa.WTildeImaging]:
@@ -152,7 +151,6 @@ class AbstractFitInversion:
         galaxy_linear_obj_image_dict = {}
 
         for linear_obj in self.inversion.linear_obj_list:
-
             try:
                 galaxy = self.inversion.linear_obj_galaxy_dict[linear_obj]
             except KeyError:
@@ -201,35 +199,10 @@ class AbstractFitInversion:
 
         return model_instance.model_obj
 
-    @property
-    def sky_linear_light_profiles_to_light_profiles(self):
-        """
-        The model object may contain linear light profiles, which solve for the `intensity` during the `Inversion`.
-
-        This means they are difficult to visualize, because they do not have a valid `intensity` parameter.
-
-        To address this, this property creates a new `model_obj` where all linear light profiles are converted to
-        ordinary light profiles whose `intensity` parameters are set to the results of the Inversion.
-
-        Returns
-        -------
-        A `model_obj` (E.g. galaxies or `Tracer`) where the light profile intensity values are set to the results
-        of those inferred via the `Inversion`.
-        """
-
-        if self.linear_light_profile_intensity_dict is None:
-            return self.sky
-
-        model_instance = self.append_linear_light_profiles_to_model(
-            model_instance=ModelInstance(dict(sky=self.sky))
-        )
-
-        return model_instance.sky
-
     def append_linear_light_profiles_to_model(self, model_instance):
         """
         For a model instance, this function replaces all linear light profiles with instances of their standard
-        light profile counterparts/
+        light profile counterparts.
 
         The `intensity` parameter of each light profile is set to the value inferred via the `Inversion`.
 

@@ -56,7 +56,7 @@ class FitQuantity(aa.FitImaging):
     def model_data(self):
         if self.model_data_manual is None:
             func = getattr(self.light_mass_obj, self.func_str)
-            return func(grid=self.dataset.grid)
+            return func(grid=self.grids.uniform)
 
         return self.model_data_manual
 
@@ -97,20 +97,12 @@ class FitQuantity(aa.FitImaging):
             )
 
     @property
-    def quantity_dataset(self):
-        return self.dataset
-
-    @property
     def mask(self):
         return self.dataset.mask
 
     @property
     def inversion(self):
         return None
-
-    @property
-    def grid(self):
-        return self.quantity_dataset.grid
 
     @property
     def galaxies(self):

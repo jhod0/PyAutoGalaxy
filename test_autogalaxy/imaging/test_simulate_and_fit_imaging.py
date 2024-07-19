@@ -9,7 +9,7 @@ import autogalaxy as ag
 
 
 def test__perfect_fit__chi_squared_0():
-    grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2)
 
     psf = ag.Kernel2D.from_gaussian(
         shape_native=(3, 3), pixel_scales=0.2, sigma=0.75, normalize=True
@@ -61,14 +61,10 @@ def test__perfect_fit__chi_squared_0():
     mask = ag.Mask2D.circular(
         shape_native=dataset.data.shape_native,
         pixel_scales=0.2,
-        sub_size=1,
         radius=0.8,
     )
 
     masked_dataset = dataset.apply_mask(mask=mask)
-    masked_dataset = masked_dataset.apply_settings(
-        settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
-    )
 
     fit = ag.FitImaging(dataset=masked_dataset, galaxies=[galaxy_0, galaxy_1])
 
@@ -83,7 +79,7 @@ def test__perfect_fit__chi_squared_0():
 
 
 def test__simulate_imaging_data_and_fit__known_likelihood():
-    grid = ag.Grid2D.uniform(shape_native=(31, 31), pixel_scales=0.2, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(31, 31), pixel_scales=0.2)
 
     psf = ag.Kernel2D.from_gaussian(
         shape_native=(3, 3), pixel_scales=0.2, sigma=0.75, normalize=True
@@ -119,7 +115,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
     # Check that using a Basis gives the same result.
 
     basis = ag.lp_basis.Basis(
-        light_profile_list=[
+        profile_list=[
             ag.lp.Sersic(centre=(0.1, 0.1), intensity=0.1),
             ag.lp.Sersic(centre=(0.2, 0.2), intensity=0.2),
         ]
@@ -137,7 +133,7 @@ def test__simulate_imaging_data_and_fit__known_likelihood():
 
 
 def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standard_light_profiles():
-    grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2, sub_size=1)
+    grid = ag.Grid2D.uniform(shape_native=(11, 11), pixel_scales=0.2)
 
     psf = ag.Kernel2D.from_gaussian(
         shape_native=(3, 3), pixel_scales=0.2, sigma=0.75, normalize=True
@@ -161,14 +157,10 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     mask = ag.Mask2D.circular(
         shape_native=dataset.data.shape_native,
         pixel_scales=0.2,
-        sub_size=1,
         radius=0.8,
     )
 
     masked_dataset = dataset.apply_mask(mask=mask)
-    masked_dataset = masked_dataset.apply_settings(
-        settings=ag.SettingsImaging(grid_class=ag.Grid2D, sub_size=1)
-    )
 
     fit = ag.FitImaging(dataset=masked_dataset, galaxies=[galaxy])
 
@@ -199,9 +191,9 @@ def test__simulate_imaging_data_and_fit__linear_light_profiles_agree_with_standa
     assert fit_linear.figure_of_merit == pytest.approx(-45.02798, 1.0e-4)
 
     galaxy_image = galaxy.blurred_image_2d_from(
-        grid=masked_dataset.grid,
+        grid=masked_dataset.grids.uniform,
         convolver=masked_dataset.convolver,
-        blurring_grid=masked_dataset.blurring_grid,
+        blurring_grid=masked_dataset.grids.blurring,
     )
 
     assert fit_linear.galaxy_model_image_dict[galaxy_linear] == pytest.approx(
