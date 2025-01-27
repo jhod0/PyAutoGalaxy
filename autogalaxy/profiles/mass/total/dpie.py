@@ -68,7 +68,7 @@ class dPIESph(MassProfile):
         raise NotImplementedError
 
     @aa.grid_dec.to_vector_yx
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         ys, xs = grid.T
         (ycen, xcen) = self.centre
         xoff, yoff = xs - xcen, ys - ycen
@@ -86,14 +86,14 @@ class dPIESph(MassProfile):
     @aa.grid_dec.to_array
     @aa.grid_dec.transform
     @aa.grid_dec.relocate_to_radial_minimum
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         # already transformed to center on profile centre so this works
         radsq = (grid[:, 0]**2 + grid[:, 1]**2)
         return self._convergence(np.sqrt(radsq))
 
     @aa.grid_dec.to_array
     @aa.grid_dec.relocate_to_radial_minimum
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         # already transformed to center on profile centre so this works
         radsq = (grid[:, 0]**2 + grid[:, 1]**2)
         return self._potential(np.sqrt(radsq))
@@ -167,7 +167,7 @@ class dPIE(dPIESph):
         return min(ellip, MAX_ELLIP)
 
     @aa.grid_dec.to_vector_yx
-    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike):
+    def deflections_yx_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         ys, xs = grid.T
         (ycen, xcen) = self.centre
         xoff, yoff = xs - xcen, ys - ycen
@@ -190,7 +190,7 @@ class dPIE(dPIESph):
         )
 
     @aa.grid_dec.to_array
-    def convergence_2d_from(self, grid: aa.type.Grid2DLike):
+    def convergence_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         ys, xs = grid.T
         (ycen, xcen) = self.centre
         xoff, yoff = xs - xcen, ys - ycen
@@ -211,7 +211,7 @@ class dPIE(dPIESph):
         return kappa_circ * (1 - asymm_term) + (alpha_circ / _radii) * asymm_term
 
     @aa.grid_dec.to_array
-    def potential_2d_from(self, grid: aa.type.Grid2DLike):
+    def potential_2d_from(self, grid: aa.type.Grid2DLike, **kwargs):
         ys, xs = grid.T
         (ycen, xcen) = self.centre
         xoff, yoff = xs - xcen, ys - ycen
